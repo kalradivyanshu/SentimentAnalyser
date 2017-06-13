@@ -1,0 +1,4 @@
+*.pickle
+*.json
+300features_40minwords_10context
+__pycache__/

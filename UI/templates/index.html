@@ -1,0 +1,74 @@
+<html>
+<head>
+	<title>
+		Sentiment Analyser
+	</title>
+	<script type="text/javascript">
+		function getprediction() {
+			var tweet = document.getElementById("tweet").value;
+			if (tweet.length == 0)
+			{ 
+				document.getElementById("answer").innerHTML = "";
+				return;
+			}
+			else
+			{
+				var xmlhttp = new XMLHttpRequest();
+				xmlhttp.onreadystatechange = function() {
+					if (xmlhttp.readyState == 4 && xmlhttp.status == 200)
+					{
+						var response = xmlhttp.responseText;
+						window.test = response;
+						var scores = response.split("(")[1].split(")")[0].split(", ");
+						var posscore = parseFloat(scores[1])*100
+						var negscore = parseFloat(scores[0])*100
+						console.log(posscore, negscore)
+						console.log(response);
+						document.getElementById("positive").style.width = posscore+"%";
+						document.getElementById("negative").style.width = negscore+"%";
+						document.getElementById("positive").innerHTML = ""+posscore;
+						document.getElementById("negative").innerHTML = ""+negscore;
+					}
+				};
+				xmlhttp.open("GET", "/predict/?tweet=" + tweet, true);
+				xmlhttp.send();
+			}
+		}
+	</script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="font-family: 'Open Sans', sans-serif;">
+	<div class="container">
+		<div style="margin-top:100px;">
+			<div style="margin-bottom:100px;">
+				<h4 align="center">
+					iMedicalHub | Sentiment Analyzer
+				</h4>
+			</div>
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3">
+					<div class="input-group">
+						<input type="text" id="tweet" class="form-control" placeholder="Type a tweet...">
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" onclick="getprediction()">Go!</button>
+						</span>
+					</div><!-- /input-group -->
+					<div class="progress" style="margin-top:20px;">
+						<div class="progress-bar progress-bar-success" id="positive" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+							50
+						</div>
+					</div>
+					<div class="progress" style="margin-top:20px;">
+						<div class="progress-bar progress-bar-danger" id="negative" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+							50
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
